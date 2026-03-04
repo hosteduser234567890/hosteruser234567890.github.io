@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #1a1a1a;
+        font-family: 'Lato', sans-serif;
+        color: #f0ece4;
+        min-height: 100vh;
+      }
+
+      /* ── NAVBAR ── */
+      nav {
+        background-color: #333;
+        padding: 8px 16px;
+        border-radius: 12px;
+        margin: 14px;
+      }
+
+      ul.navbar {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      ul.navbar li {
+        display: inline-block;
+      }
+
+      ul.navbar li a {
+        display: block;
+        color: white;
+        padding: 10px 16px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-family: 'Lato', sans-serif;
+        font-weight: 400;
+        font-size: 0.95rem;
+        letter-spacing: 0.03em;
+        transition: background-color 0.2s ease;
+      }
+
+      ul.navbar li a:hover {
+        background-color: #111;
+      }
+
+      /* ── MAIN CONTENT AREA ── */
+      .content-wrapper {
+        margin: 20px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Matches the navbar card style */
+      .card {
+        background-color: #333;
+        border-radius: 12px;
+        padding: 36px 42px;
+        color: #f0ece4;
+        line-height: 1.8;
+      }
+
+      .card h1, .card h2, .card h3 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #fff;
+      }
+
+      .card h1 { font-size: 2rem; }
+      .card h2 { font-size: 1.4rem; }
+
+      .card p {
+        font-weight: 300;
+        font-size: 1rem;
+        color: #ccc;
+        margin: 0 0 14px 0;
+      }
+
+      .card p:last-child { margin-bottom: 0; }
+
+      /* Accent divider */
+      .divider {
+        height: 1px;
+        background: linear-gradient(to right, #666, transparent);
+        margin: 20px 0;
+      }
+
+      /* Quote style */
+      blockquote {
+        margin: 0;
+        padding-left: 18px;
+        border-left: 3px solid #888;
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: 1.1rem;
+        color: #ddd;
+      }
+
+      blockquote cite {
+        display: block;
+        margin-top: 8px;
+        font-style: normal;
+        font-family: 'Lato', sans-serif;
+        font-size: 0.85rem;
+        color: #999;
+        letter-spacing: 0.05em;
+      }
+
+      /* ── SCROLL TO TOP BUTTON ── */
+      #scrollTopBtn {
+        display: none;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        z-index: 999;
+      }
+
+      #scrollTopBtn:hover {
+        background-color: #111;
+        transform: translateY(-2px);
+      }
+    </style>
+    <script>
+      window.addEventListener('scroll', function () {
+        const btn = document.getElementById('scrollTopBtn');
+        btn.style.display = window.scrollY > 100 ? 'block' : 'none';
+      });
+
+      function scrollToTop() {
+        window.location.hash = '#home';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    </script>
+  </head>
+  <body>
+
+    <!-- SCROLL TO TOP BUTTON -->
+    <button id="scrollTopBtn" onclick="scrollToTop()" title="Back to top">&#8593;</button>
+
+    <!-- NAVBAR -->
+    <nav id="home">
+      <ul class="navbar">
+        <li><a href="#home">Home</a></li>
+        <li><a href="">Share</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/International_Women%27s_Day">Learn more</a></li>
+      </ul>
+    </nav>
+
+    <!-- CONTENT CARDS -->
+    <div class="content-wrapper">
+
+      <!-- Hero card -->
+      <div class="card">
+        <h1>International Women's Day</h1>
+        <p>
+          Celebrating Every Woman — International Women's Day is more than a date on the calendar.
+          It is a celebration of courage, resilience, and the enduring spirit of women across the world.
+          From the boardroom to the battlefield, from the classroom to the community, women have shaped
+          history in ways both seen and unseen. Today, we pause to honor their contributions and recommit
+          ourselves to a world where every woman can thrive.
+        </p>
+      </div>
+
+      <!-- Quote card -->
+      <div class="card">
+        <h2>Words That Inspire</h2>
+        <div class="divider"></div>
+        <blockquote>
+          "I raise up my voice — not so that I can shout, but so that those without a voice can be heard."
+          <cite>— Malala Yousafzai</cite>
+        </blockquote>
+        <div class="divider"></div>
+        <blockquote>
+          "Well-behaved women seldom make history."
+          <cite>— Laurel Thatcher Ulrich</cite>
+        </blockquote>
+        <div class="divider"></div>
+        <blockquote>
+          "Feminism isn't about making women stronger. Women are already strong."
+          <cite>— G.D. Anderson</cite>
+        </blockquote>
+      </div>
+
+      <!-- Second paragraph card -->
+      <div class="card">
+        <h2>A Call to Action</h2>
+        <p>
+          Celebrating women means more than words — it means action. It means equal pay, equal opportunity,
+          and equal respect. It means listening to women's voices in every decision that shapes our world.
+          As we mark this special day, let us carry forward the promise of progress — not just for one day,
+          but every day of the year.
+        </p>
+        <p>
+          Together, we can build a future where no girl ever has to fight for the right to dream.
+        </p>
+      </div>
+
+    </div>
+
+  </body>
+</html>
