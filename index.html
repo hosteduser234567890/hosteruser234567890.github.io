@@ -116,6 +116,88 @@
         letter-spacing: 0.05em;
       }
 
+      .hero-actions {
+        margin-top: 22px;
+      }
+
+      .fact-btn {
+        border: none;
+        border-radius: 999px;
+        padding: 12px 20px;
+        font-family: 'Lato', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        font-size: 0.95rem;
+        color: #1a1a1a;
+        background: linear-gradient(120deg, #ffd166, #ff9f1c);
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(255, 173, 51, 0.35);
+        animation: factGlow 2.2s ease-in-out infinite;
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+
+      .fact-btn:hover {
+        transform: translateY(-2px) scale(1.02);
+        filter: brightness(1.08);
+      }
+
+      @keyframes factGlow {
+        0%, 100% {
+          box-shadow: 0 0 0 0 rgba(255, 183, 77, 0.55), 0 12px 26px rgba(255, 173, 51, 0.28);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(255, 183, 77, 0), 0 16px 34px rgba(255, 173, 51, 0.45);
+        }
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.72);
+        z-index: 1000;
+        padding: 18px;
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        width: min(700px, 92vw);
+        background: #2c2c2c;
+        border: 1px solid #575757;
+        border-radius: 14px;
+        padding: 28px 24px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+        position: relative;
+      }
+
+      .modal-content h3 {
+        margin: 0 0 10px 0;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.45rem;
+      }
+
+      .modal-content p {
+        margin: 0;
+        color: #ddd;
+        line-height: 1.7;
+      }
+
+      .close-btn {
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        border: none;
+        background: transparent;
+        color: #ddd;
+        font-size: 1.4rem;
+        cursor: pointer;
+      }
+
       /* ── SCROLL TO TOP BUTTON ── */
       #scrollTopBtn {
         display: none;
@@ -150,6 +232,63 @@
         window.location.hash = '#home';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+
+      const fallbackQuotes = [
+        "Here's to strong women: May we know them. May we be them. May we raise them. - Unknown",
+        "There is no limit to what we, as women, can accomplish. - Michelle Obama",
+        "Well-behaved women seldom make history. - Laurel Thatcher Ulrich",
+        "A woman with a voice is, by definition, a strong woman. - Melinda Gates",
+        "We cannot all succeed when half of us are held back. - Malala Yousafzai"
+      ];
+      let allQuotes = [];
+      let unusedQuotes = [];
+
+      function sanitizeQuoteLine(line) {
+        return line.replace(/^\s*\d+\.\s*/, '').trim();
+      }
+
+      async function loadQuotes() {
+        if (allQuotes.length) return;
+        try {
+          const response = await fetch('quotes.txt', { cache: 'no-store' });
+          if (!response.ok) throw new Error('Quotes file not reachable');
+          const text = await response.text();
+          const lines = text
+            .split('\n')
+            .map(sanitizeQuoteLine)
+            .filter(Boolean);
+          allQuotes = lines.length ? lines : fallbackQuotes.slice();
+        } catch (error) {
+          allQuotes = fallbackQuotes.slice();
+        }
+        unusedQuotes = allQuotes.slice();
+      }
+
+      function getUniqueQuote() {
+        if (!unusedQuotes.length) unusedQuotes = allQuotes.slice();
+        const index = Math.floor(Math.random() * unusedQuotes.length);
+        return unusedQuotes.splice(index, 1)[0];
+      }
+
+      async function showUniqueFact() {
+        await loadQuotes();
+        document.getElementById('uniqueQuoteText').textContent = getUniqueQuote();
+        document.getElementById('quoteModal').classList.add('show');
+      }
+
+      function closeQuoteModal() {
+        document.getElementById('quoteModal').classList.remove('show');
+      }
+
+      window.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('quoteModal');
+        modal.addEventListener('click', function (event) {
+          if (event.target === modal) closeQuoteModal();
+        });
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') closeQuoteModal();
+        });
+      });
     </script>
   </head>
   <body>
@@ -179,6 +318,9 @@
           history in ways both seen and unseen. Today, we pause to honor their contributions and recommit
           ourselves to a world where every woman can thrive.
         </p>
+        <div class="hero-actions">
+          <button class="fact-btn" onclick="showUniqueFact()">Unique Fact</button>
+        </div>
       </div>
 
       <!-- Quote card -->
@@ -215,6 +357,14 @@
         </p>
       </div>
 
+    </div>
+
+    <div id="quoteModal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeQuoteModal()" aria-label="Close popup">&times;</button>
+        <h3>Unique Women's Day Quote</h3>
+        <p id="uniqueQuoteText"></p>
+      </div>
     </div>
 
   </body>
