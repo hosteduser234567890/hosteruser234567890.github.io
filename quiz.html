@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Women's Day Author Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #fff6ef;
+      --bg-2: #ffe0c7;
+      --ink: #2a1b16;
+      --ink-soft: #634b43;
+      --card: rgba(255, 255, 255, 0.78);
+      --accent: #ff6f3c;
+      --accent-2: #ffb703;
+      --ok: #157a4f;
+      --bad: #8f1f2c;
+      --shadow: 0 18px 40px rgba(78, 34, 14, 0.18);
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 183, 3, 0.28), transparent 32%),
+        radial-gradient(circle at 82% 8%, rgba(255, 111, 60, 0.22), transparent 34%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2));
+      padding: 16px;
+    }
+
+    .shell {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 30px 22px 18px;
+      background: linear-gradient(135deg, #fff9f4 10%, #ffe6d1 90%);
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -85px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 111, 60, 0.32), rgba(255, 111, 60, 0));
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2rem, 5.8vw, 3rem);
+      line-height: 1.02;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--ink-soft);
+      font-size: clamp(0.95rem, 2.6vw, 1.07rem);
+      max-width: 62ch;
+    }
+
+    .controls {
+      padding: 16px 22px 22px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid rgba(132, 88, 69, 0.16);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .stat {
+      background: #fff;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      border: 1px solid rgba(133, 90, 72, 0.17);
+    }
+
+    .stat .k {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8a6f65;
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .stat .v {
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .main {
+      padding: 20px 22px 26px;
+    }
+
+    .bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #f5dfd0;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 240ms ease;
+    }
+
+    .quote {
+      margin: 0;
+      background: #fff;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(133, 90, 72, 0.17);
+      padding: 22px 18px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.32rem, 4vw, 2rem);
+      line-height: 1.2;
+    }
+
+    .options {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .opt {
+      appearance: none;
+      border: 1px solid rgba(133, 90, 72, 0.25);
+      border-radius: var(--radius-md);
+      background: #fff;
+      color: var(--ink);
+      padding: 14px 12px;
+      text-align: left;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .opt:hover { transform: translateY(-1px); }
+    .opt:disabled { cursor: default; opacity: 0.95; }
+    .opt.correct { border-color: var(--ok); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ok) 33%, white); }
+    .opt.wrong { border-color: var(--bad); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--bad) 26%, white); }
+
+    .bottom {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .msg {
+      min-height: 1.4em;
+      color: #5b4138;
+      font-weight: 700;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 18px;
+      background: linear-gradient(95deg, var(--accent), #ff9657);
+      color: white;
+      font: inherit;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(255, 111, 60, 0.3);
+      transition: transform 140ms ease, filter 140ms ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+    .screen {
+      display: none;
+      animation: rise 320ms ease;
+    }
+
+    .screen.show { display: block; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .intro-copy {
+      color: #523e36;
+      line-height: 1.65;
+      max-width: 65ch;
+      margin: 0 0 16px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.88rem;
+      color: #84695f;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 10px; }
+      .hero, .main, .controls { padding-left: 14px; padding-right: 14px; }
+      .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .options { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="hero">
+      <h1>Women's Day Author Quest</h1>
+      <p class="subtitle">Read each quote and choose the right author. A fast, mobile-friendly quiz built from your local <code>quotes.txt</code> file.</p>
+    </header>
+
+    <section class="controls" aria-label="Game stats">
+      <div class="stat"><span class="k">Score</span><span id="score" class="v">0</span></div>
+      <div class="stat"><span class="k">Question</span><span id="qnum" class="v">0 / 0</span></div>
+      <div class="stat"><span class="k">Streak</span><span id="streak" class="v">0</span></div>
+      <div class="stat"><span class="k">Time Left</span><span id="time" class="v">20s</span></div>
+    </section>
+
+    <main class="main">
+      <section id="start-screen" class="screen show">
+        <p class="intro-copy">You get 6 rounds. Each round gives one Women’s Day quote and four possible authors. Answer quickly for a streak. Press <strong>F</strong> to toggle fullscreen.</p>
+        <button id="start-btn" class="btn">Start Quiz</button>
+        <p id="load-status" class="footer-note">Loading quotes from local file...</p>
+      </section>
+
+      <section id="quiz-screen" class="screen" aria-live="polite">
+        <div class="bar"><span id="progress-fill"></span></div>
+        <blockquote id="quote" class="quote"></blockquote>
+        <div id="options" class="options"></div>
+        <div class="bottom">
+          <p id="msg" class="msg"></p>
+          <button id="skip-btn" class="btn" type="button">Skip</button>
+        </div>
+      </section>
+
+      <section id="end-screen" class="screen">
+        <h2 style="margin-top:0; font-family:'Cormorant Garamond', serif; font-size:2rem;">Quiz Complete</h2>
+        <p id="final" class="intro-copy"></p>
+        <button id="restart-btn" class="btn" type="button">Play Again</button>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const fallbackQuoteLines = [
+      "There is no limit to what we, as women, can accomplish. - Michelle Obama",
+      "Well-behaved women seldom make history. - Laurel Thatcher Ulrich",
+      "The most courageous act is still to think for yourself. Aloud. - Coco Chanel",
+      "A woman with a voice is, by definition, a strong woman. - Melinda Gates",
+      "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+      "We cannot all succeed when half of us are held back. - Malala Yousafzai",
+      "Human rights are women's rights, and women's rights are human rights. - Hillary Clinton",
+      "Each time a woman stands up for herself, she stands up for all women. - Maya Angelou",
+      "The best protection any woman can have is courage. - Elizabeth Cady Stanton",
+      "Women are the real architects of society. - Harriet Beecher Stowe"
+    ];
+
+    const state = {
+      mode: "start",
+      allQuotes: [],
+      questions: [],
+      currentIndex: 0,
+      currentOptions: [],
+      selectedAuthor: null,
+      score: 0,
+      streak: 0,
+      bestStreak: 0,
+      questionTimeMs: 20000,
+      remainingMs: 20000,
+      lastAdvanceAt: null,
+      locked: false
+    };
+
+    const totalRounds = 6;
+
+    const el = {
+      startScreen: document.getElementById("start-screen"),
+      quizScreen: document.getElementById("quiz-screen"),
+      endScreen: document.getElementById("end-screen"),
+      startBtn: document.getElementById("start-btn"),
+      restartBtn: document.getElementById("restart-btn"),
+      skipBtn: document.getElementById("skip-btn"),
+      loadStatus: document.getElementById("load-status"),
+      score: document.getElementById("score"),
+      qnum: document.getElementById("qnum"),
+      streak: document.getElementById("streak"),
+      time: document.getElementById("time"),
+      progressFill: document.getElementById("progress-fill"),
+      quote: document.getElementById("quote"),
+      options: document.getElementById("options"),
+      msg: document.getElementById("msg"),
+      final: document.getElementById("final")
+    };
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function parseQuoteLine(line) {
+      const clean = line.trim();
+      if (!clean) return null;
+      const splitAt = clean.lastIndexOf(" - ");
+      if (splitAt < 1 || splitAt === clean.length - 3) return null;
+      return {
+        text: clean.slice(0, splitAt).trim(),
+        author: clean.slice(splitAt + 3).trim()
+      };
+    }
+
+    function updateStats() {
+      el.score.textContent = String(state.score);
+      el.streak.textContent = String(state.streak);
+      el.qnum.textContent = `${Math.min(state.currentIndex + 1, state.questions.length)} / ${state.questions.length}`;
+      el.time.textContent = `${Math.max(0, Math.ceil(state.remainingMs / 1000))}s`;
+      const progress = state.questions.length ? (state.currentIndex / state.questions.length) * 100 : 0;
+      el.progressFill.style.width = `${progress}%`;
+    }
+
+    function setScreen(name) {
+      state.mode = name;
+      el.startScreen.classList.toggle("show", name === "start");
+      el.quizScreen.classList.toggle("show", name === "quiz");
+      el.endScreen.classList.toggle("show", name === "end");
+    }
+
+    function makeOptions(correctAuthor) {
+      const authors = Array.from(new Set(state.allQuotes.map(q => q.author))).filter(Boolean);
+      const wrong = shuffle(authors.filter(a => a !== correctAuthor)).slice(0, 3);
+      return shuffle([correctAuthor, ...wrong]);
+    }
+
+    function renderQuestion() {
+      const q = state.questions[state.currentIndex];
+      state.currentOptions = makeOptions(q.author);
+      state.selectedAuthor = null;
+      state.locked = false;
+      state.remainingMs = state.questionTimeMs;
+      state.lastAdvanceAt = Date.now();
+      el.quote.textContent = `"${q.text}"`;
+      el.options.innerHTML = "";
+      el.msg.textContent = "";
+
+      state.currentOptions.forEach((author) => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.type = "button";
+        b.textContent = author;
+        b.addEventListener("click", () => answer(author));
+        el.options.appendChild(b);
+      });
+
+      updateStats();
+    }
+
+    function lockAndStyle(correctAuthor, selectedAuthor) {
+      [...el.options.children].forEach((btn) => {
+        btn.disabled = true;
+        const author = btn.textContent;
+        if (author === correctAuthor) btn.classList.add("correct");
+        if (author === selectedAuthor && selectedAuthor !== correctAuthor) btn.classList.add("wrong");
+      });
+    }
+
+    function answer(author) {
+      if (state.mode !== "quiz" || state.locked) return;
+      const q = state.questions[state.currentIndex];
+      state.locked = true;
+      state.selectedAuthor = author;
+      const correct = author === q.author;
+      if (correct) {
+        state.score += 1;
+        state.streak += 1;
+        state.bestStreak = Math.max(state.bestStreak, state.streak);
+        el.msg.textContent = "Correct. Brilliant pick.";
+      } else {
+        state.streak = 0;
+        el.msg.textContent = `Not this one. Correct author: ${q.author}`;
+      }
+      lockAndStyle(q.author, author);
+      updateStats();
+      window.setTimeout(nextQuestion, 850);
+    }
+
+    function timeoutQuestion() {
+      if (state.mode !== "quiz" || state.locked) return;
+      state.locked = true;
+      const q = state.questions[state.currentIndex];
+      state.streak = 0;
+      el.msg.textContent = `Time's up. Correct author: ${q.author}`;
+      lockAndStyle(q.author, "");
+      updateStats();
+      window.setTimeout(nextQuestion, 850);
+    }
+
+    function nextQuestion() {
+      state.currentIndex += 1;
+      if (state.currentIndex >= state.questions.length) {
+        endGame();
+        return;
+      }
+      renderQuestion();
+    }
+
+    function endGame() {
+      setScreen("end");
+      const total = state.questions.length;
+      const pct = total ? Math.round((state.score / total) * 100) : 0;
+      el.final.textContent = `You scored ${state.score}/${total} (${pct}%). Best streak: ${state.bestStreak}.`;
+      updateStats();
+    }
+
+    function startGame() {
+      if (!state.allQuotes.length) return;
+      state.questions = shuffle(state.allQuotes).slice(0, Math.min(totalRounds, state.allQuotes.length));
+      state.currentIndex = 0;
+      state.score = 0;
+      state.streak = 0;
+      state.bestStreak = 0;
+      setScreen("quiz");
+      renderQuestion();
+    }
+
+    function tickTimer() {
+      if (state.mode !== "quiz" || state.locked) return;
+      const now = Date.now();
+      const delta = now - (state.lastAdvanceAt || now);
+      state.lastAdvanceAt = now;
+      state.remainingMs -= delta;
+      if (state.remainingMs <= 0) {
+        state.remainingMs = 0;
+        updateStats();
+        timeoutQuestion();
+        return;
+      }
+      updateStats();
+    }
+
+    async function loadQuotes() {
+      let lines = [];
+      try {
+        const res = await fetch("./quotes.txt", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch quotes.txt");
+        lines = (await res.text()).split(/\r?\n/);
+      } catch (_) {
+        lines = fallbackQuoteLines;
+        el.loadStatus.textContent = "Using built-in fallback quotes. Open with a local server to load quotes.txt.";
+      }
+
+      const parsed = lines.map(parseQuoteLine).filter(Boolean);
+      state.allQuotes = parsed;
+      if (state.allQuotes.length < 4) {
+        el.loadStatus.textContent = "Need at least 4 valid quote lines in quotes.txt (format: Quote - Author).";
+        el.startBtn.disabled = true;
+        return;
+      }
+
+      if (!el.loadStatus.textContent.includes("fallback")) {
+        el.loadStatus.textContent = `Loaded ${state.allQuotes.length} quotes from quotes.txt.`;
+      }
+      el.startBtn.disabled = false;
+      updateStats();
+    }
+
+    window.render_game_to_text = function renderGameToText() {
+      const q = state.questions[state.currentIndex] || null;
+      return JSON.stringify({
+        coordinate_system: "DOM quiz, no canvas coordinates",
+        mode: state.mode,
+        score: state.score,
+        streak: state.streak,
+        best_streak: state.bestStreak,
+        question_index: state.currentIndex,
+        total_questions: state.questions.length,
+        time_remaining_ms: Math.max(0, Math.round(state.remainingMs)),
+        current_quote: q ? q.text : null,
+        correct_author: q ? q.author : null,
+        options: state.currentOptions,
+        selected_author: state.selectedAuthor
+      });
+    };
+
+    window.advanceTime = function advanceTime(ms) {
+      if (state.mode !== "quiz" || state.locked) return;
+      state.remainingMs -= ms;
+      state.lastAdvanceAt = Date.now();
+      if (state.remainingMs <= 0) {
+        state.remainingMs = 0;
+        updateStats();
+        timeoutQuestion();
+      } else {
+        updateStats();
+      }
+    };
+
+    async function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "f") toggleFullscreen().catch(() => {});
+    });
+
+    el.startBtn.addEventListener("click", startGame);
+    el.restartBtn.addEventListener("click", () => {
+      setScreen("start");
+      updateStats();
+    });
+    el.skipBtn.addEventListener("click", timeoutQuestion);
+
+    window.setInterval(tickTimer, 120);
+    loadQuotes();
+  </script>
+</body>
+</html>
